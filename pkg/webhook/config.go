@@ -8,6 +8,10 @@ const (
 	// priority.
 	AnnotationInject = "oneagent.dynatrace.com/inject"
 
+	// AnnotationDisableSecurityContext can be set at the pod or namespace label to enable/disable setting the security
+	// context on the init container, where at pod level has higher priority
+	AnnotationDisableSecurityContext = "oneagent.dynatrace.com/disable-security-context"
+
 	// AnnotationInjected is set to "true" by the webhook to Pods to indicate that it has been modified.
 	AnnotationInjected = "oneagent.dynatrace.com/injected"
 

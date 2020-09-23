@@ -106,6 +106,9 @@ func (m *podInjector) Handle(ctx context.Context, req admission.Request) admissi
 	}
 	pod.Annotations[dtwebhook.AnnotationInjected] = "true"
 
+	disableSecurityContext := utils.GetField(ns.Annotations, dtwebhook.AnnotationDisableSecurityContext, "false")
+	disableSecurityContext = utils.GetField(pod.Annotations, dtwebhook.AnnotationDisableSecurityContext, disableSecurityContext)
+
 	flavor := url.QueryEscape(utils.GetField(pod.Annotations, dtwebhook.AnnotationFlavor, "default"))
 	technologies := url.QueryEscape(utils.GetField(pod.Annotations, dtwebhook.AnnotationTechnologies, "all"))
 	installPath := utils.GetField(pod.Annotations, dtwebhook.AnnotationInstallPath, dtwebhook.DefaultInstallPath)
@@ -144,7 +147,7 @@ func (m *podInjector) Handle(ctx context.Context, req admission.Request) admissi
 		})
 
 	var sc *corev1.SecurityContext
-	if pod.Spec.Containers[0].SecurityContext != nil {
+	if disableSecurityContext != "true" && pod.Spec.Containers[0].SecurityContext != nil {
 		sc = pod.Spec.Containers[0].SecurityContext.DeepCopy()
 	}
 
